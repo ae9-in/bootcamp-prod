@@ -18,6 +18,7 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [role, setRole] = useState<'student' | 'mentor' | 'admin'>(isAdminPath ? 'admin' : 'student');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const [shake, setShake] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -25,17 +26,23 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    const err = await login(email, password, role);
-    if (err) {
-      setError(err);
-      setShake(true);
-      setTimeout(() => setShake(false), 500);
-      return;
-    }
-    const storedUser = localStorage.getItem('currentUser');
-    if (storedUser) {
-      const user = JSON.parse(storedUser);
-      navigate(`/dashboard/${user.role}`);
+    setIsLoading(true);
+    
+    try {
+      const err = await login(email, password, role);
+      if (err) {
+        setError(err);
+        setShake(true);
+        setTimeout(() => setShake(false), 500);
+        return;
+      }
+      const storedUser = localStorage.getItem('currentUser');
+      if (storedUser) {
+        const user = JSON.parse(storedUser);
+        navigate(`/dashboard/${user.role}`);
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -123,8 +130,12 @@ export default function Login() {
                   </motion.p>
                 )}
                 
-                <Button type="submit" className="w-full py-6 text-lg font-semibold shadow-lg shadow-primary/20">
-                  {isAdminPath ? 'Authorized Login' : 'Sign In'}
+                <Button 
+                  type="submit" 
+                  disabled={isLoading}
+                  className="w-full py-6 text-lg font-semibold shadow-lg shadow-primary/20"
+                >
+                  {isLoading ? 'Signing in...' : (isAdminPath ? 'Authorized Login' : 'Sign In')}
                 </Button>
               </form>
               {!isAdminPath && (

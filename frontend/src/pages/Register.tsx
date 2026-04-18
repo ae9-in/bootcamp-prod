@@ -16,6 +16,7 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [role, setRole] = useState<'student' | 'mentor'>('student');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const [shake, setShake] = useState(false);
   const { register } = useAuth();
   const navigate = useNavigate();
@@ -23,14 +24,20 @@ export default function Register() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    const err = await register(name, email, password, role);
-    if (err) {
-      setError(err);
-      setShake(true);
-      setTimeout(() => setShake(false), 500);
-      return;
+    setIsLoading(true);
+    
+    try {
+      const err = await register(name, email, password, role);
+      if (err) {
+        setError(err);
+        setShake(true);
+        setTimeout(() => setShake(false), 500);
+        return;
+      }
+      navigate(`/dashboard/${role}`);
+    } finally {
+      setIsLoading(false);
     }
-    navigate(`/dashboard/${role}`);
   };
 
   return (
@@ -127,8 +134,12 @@ export default function Register() {
                   </motion.p>
                 )}
 
-                <Button type="submit" className="w-full py-6 text-lg font-semibold shadow-lg shadow-primary/20">
-                  Register Now
+                <Button 
+                  type="submit" 
+                  disabled={isLoading}
+                  className="w-full py-6 text-lg font-semibold shadow-lg shadow-primary/20"
+                >
+                  {isLoading ? 'Registering...' : 'Register Now'}
                 </Button>
               </form>
               <p className="mt-6 text-center text-sm text-muted-foreground">
