@@ -183,21 +183,24 @@ export default function AdminDashboard() {
             { icon: Video, label: 'Active Meetings', value: liveMeetings },
             { icon: FileText, label: 'Recordings', value: recordings.length },
             { icon: ShoppingCart, label: 'Purchases', value: purchases.length },
-          ].map((s, i) => (
-            <motion.div key={s.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
-              <Card>
-                <CardContent className="flex items-center gap-4 pt-6">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
-                    <s.icon className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">{s.label}</p>
-                    <p className="text-2xl font-bold"><CountUp target={s.value} /></p>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
+          ].map((s, i) => {
+            const Icon = s.icon;
+            return (
+              <motion.div key={s.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
+                <Card>
+                  <CardContent className="flex items-center gap-4 pt-6">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
+                      <Icon className="h-6 w-6 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">{s.label}</p>
+                      <p className="text-2xl font-bold"><CountUp target={s.value} /></p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            );
+          })}
         </div>
 
         <Tabs defaultValue="testimonials" className="mt-8">

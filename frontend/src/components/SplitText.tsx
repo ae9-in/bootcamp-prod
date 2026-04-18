@@ -47,14 +47,14 @@ const SplitText = ({
   }, []);
 
   useEffect(() => {
-    // If we've already started animating, or things aren't ready, don't re-initialize.
     if (!fontsReady || !containerRef.current || animatedRef.current) return;
 
     const gsap = (window as any).gsap;
     if (!gsap) return;
 
-    // Use a local variable to ensure we don't re-calculate chars if not needed
-    const chars = letterRefs.current.filter(Boolean);
+    // Use querySelectorAll to get the character spans. 
+    // This is safer than ref mapping in concurrent/minified environments.
+    const chars = containerRef.current.querySelectorAll('.split-char');
     if (chars.length === 0) return;
 
     const runAnimation = () => {
@@ -62,8 +62,8 @@ const SplitText = ({
       animatedRef.current = true;
 
       gsap.to(chars, {
-        opacity: to.opacity,
-        y: to.y,
+        opacity: 1,
+        y: 0,
         duration,
         ease,
         stagger: delay / 1000,
@@ -75,21 +75,19 @@ const SplitText = ({
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[entryNumber]?.isIntersecting || entries[0].isIntersecting) {
+        if (entries[0].isIntersecting) {
           runAnimation();
           observer.disconnect();
         }
       },
       { threshold, rootMargin }
     );
-    const entryNumber = 0;
 
     observer.observe(containerRef.current);
 
     return () => {
       observer.disconnect();
     };
-    // Removed 'to' from dependency array to prevent infinite loop from object literals
   }, [fontsReady, text, delay, duration, ease, threshold, rootMargin]);
 
   const characters = text.split('');
@@ -107,11 +105,10 @@ const SplitText = ({
         {characters.map((char, i) => (
           <span
             key={i}
-            ref={(el) => (letterRefs.current[i] = el)}
+            className="split-char inline-block"
             style={{
-              display: 'inline-block',
-              opacity: from.opacity !== undefined ? String(from.opacity) : '0',
-              transform: `translateY(${from.y !== undefined ? `${from.y}px` : '40px'})`,
+              opacity: 0,
+              transform: 'translateY(40px)',
               willChange: 'transform, opacity',
             }}
           >

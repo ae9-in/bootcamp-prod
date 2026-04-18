@@ -87,25 +87,28 @@ export default function Index() {
         <div className="mx-auto max-w-7xl px-4">
           <h2 className="text-center text-3xl font-bold text-white">Why BOOTCAMP?</h2>
           <div className="mt-12 grid gap-8 md:grid-cols-3">
-            {benefits.map((b, i) => (
-              <motion.div
-                key={b.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.15 }}
-              >
-                <Card className="h-full text-center bg-indigo-950/20 border-indigo-500/20">
-                  <CardContent className="pt-8 pb-8">
-                    <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-indigo-600/20">
-                      <b.icon className="h-7 w-7 text-indigo-400" />
-                    </div>
-                    <h3 className="text-lg font-semibold text-white">{b.title}</h3>
-                    <p className="mt-2 text-sm text-indigo-300">{b.desc}</p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
+            {benefits.map((b, i) => {
+              const Icon = b.icon;
+              return (
+                <motion.div
+                  key={b.title}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.15 }}
+                >
+                  <Card className="h-full text-center bg-indigo-950/20 border-indigo-500/20">
+                    <CardContent className="pt-8 pb-8">
+                      <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-indigo-600/20">
+                        <Icon className="h-7 w-7 text-indigo-400" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-white">{b.title}</h3>
+                      <p className="mt-2 text-sm text-indigo-300">{b.desc}</p>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
