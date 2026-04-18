@@ -6,6 +6,8 @@ export interface ITestimonial extends Document {
   text: string;
   rating: number;
   avatarInitials: string;
+  imageUrl?: string;
+  videoUrl?: string;
 }
 
 const TestimonialSchema = new Schema<ITestimonial>({

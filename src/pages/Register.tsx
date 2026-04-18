@@ -14,6 +14,7 @@ export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [role, setRole] = useState<'student' | 'mentor'>('student');
   const [error, setError] = useState('');
   const [shake, setShake] = useState(false);
   const { register } = useAuth();
@@ -22,14 +23,14 @@ export default function Register() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    const err = await register(name, email, password);
+    const err = await register(name, email, password, role);
     if (err) {
       setError(err);
       setShake(true);
       setTimeout(() => setShake(false), 500);
       return;
     }
-    navigate('/dashboard/student');
+    navigate(`/dashboard/${role}`);
   };
 
   return (
@@ -48,6 +49,26 @@ export default function Register() {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-5">
+                <div className="space-y-3">
+                  <Label className="text-sm font-medium">Register as</Label>
+                  <div className="flex gap-4 p-1 bg-muted rounded-lg">
+                    <button
+                      type="button"
+                      onClick={() => setRole('student')}
+                      className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${role === 'student' ? 'bg-background shadow-sm text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+                    >
+                      Student
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setRole('mentor')}
+                      className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${role === 'mentor' ? 'bg-background shadow-sm text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+                    >
+                      Mentor
+                    </button>
+                  </div>
+                </div>
+
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="name">Full Name</Label>
@@ -78,9 +99,10 @@ export default function Register() {
                       <Input 
                         id="password" 
                         type={showPassword ? "text" : "password"} 
-                        placeholder="••••••••"
+                        placeholder="Create a password"
                         value={password} 
                         onChange={e => setPassword(e.target.value)} 
+                        autoComplete="new-password"
                         required 
                         className="bg-background/50 pr-10 border-primary/20 focus:border-primary transition-colors"
                       />

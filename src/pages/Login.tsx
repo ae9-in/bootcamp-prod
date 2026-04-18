@@ -95,9 +95,10 @@ export default function Login() {
                       <Input 
                         id="password" 
                         type={showPassword ? "text" : "password"} 
-                        placeholder="••••••••"
+                        placeholder="Enter your password"
                         value={password} 
                         onChange={e => setPassword(e.target.value)} 
+                        autoComplete="current-password"
                         required 
                         className="bg-background/50 pr-10 border-primary/20 focus:border-primary transition-colors"
                       />
