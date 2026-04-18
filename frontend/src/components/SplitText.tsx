@@ -33,6 +33,7 @@ const SplitText = ({
   onLetterAnimationComplete,
 }: SplitTextProps) => {
   const containerRef = useRef<HTMLElement>(null);
+  const letterRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const animatedRef = useRef(false);
   const [fontsReady, setFontsReady] = useState(false);
 
@@ -48,32 +49,10 @@ const SplitText = ({
   useEffect(() => {
     if (!fontsReady || !containerRef.current || animatedRef.current) return;
 
-    const el = containerRef.current;
     const gsap = (window as any).gsap;
-    if (!gsap) return; // Fallback: just show the text if GSAP isn't ready
+    if (!gsap) return;
 
-    // Split text into individual character spans
-    const chars = text.split('').map((char, i) => {
-      const span = document.createElement('span');
-      span.textContent = char === ' ' ? '\u00A0' : char; // non-breaking space
-      span.style.cssText = `
-        display: inline-block;
-        opacity: ${from.opacity !== undefined ? String(from.opacity) : '0'};
-        transform: translateY(${from.y !== undefined ? `${from.y}px` : '40px'});
-        will-change: transform, opacity;
-      `;
-      span.setAttribute('aria-hidden', 'true');
-      return span;
-    });
-
-    // Clear content and insert spans
-    el.textContent = '';
-    // Add accessible hidden text for screen readers
-    const ariaSpan = document.createElement('span');
-    ariaSpan.className = 'sr-only';
-    ariaSpan.textContent = text;
-    el.appendChild(ariaSpan);
-    chars.forEach(span => el.appendChild(span));
+    const chars = letterRefs.current.filter(Boolean);
 
     const runAnimation = () => {
       if (animatedRef.current) return;
@@ -90,7 +69,6 @@ const SplitText = ({
       });
     };
 
-    // Use IntersectionObserver to trigger on scroll (replaces ScrollTrigger)
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
@@ -98,29 +76,44 @@ const SplitText = ({
           observer.disconnect();
         }
       },
-      {
-        threshold,
-        rootMargin,
-      }
+      { threshold, rootMargin }
     );
 
-    observer.observe(el);
+    observer.observe(containerRef.current);
 
     return () => {
       observer.disconnect();
-      // Restore plain text on unmount
-      el.textContent = text;
     };
-  }, [fontsReady, text, delay, duration, ease, threshold, rootMargin]);
+  }, [fontsReady, text, delay, duration, ease, threshold, rootMargin, to]);
+
+  const characters = text.split('');
 
   return (
-    // @ts-ignore — dynamic tag
+    // @ts-ignore
     <Tag
       ref={containerRef}
       className={className}
       style={{ textAlign, display: 'block', wordBreak: 'keep-all' }}
       aria-label={text}
-    />
+    >
+      <span className="sr-only">{text}</span>
+      <span aria-hidden="true">
+        {characters.map((char, i) => (
+          <span
+            key={i}
+            ref={(el) => (letterRefs.current[i] = el)}
+            style={{
+              display: 'inline-block',
+              opacity: from.opacity !== undefined ? String(from.opacity) : '0',
+              transform: `translateY(${from.y !== undefined ? `${from.y}px` : '40px'})`,
+              willChange: 'transform, opacity',
+            }}
+          >
+            {char === ' ' ? '\u00A0' : char}
+          </span>
+        ))}
+      </span>
+    </Tag>
   );
 };
 

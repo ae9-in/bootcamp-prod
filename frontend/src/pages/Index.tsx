@@ -134,7 +134,7 @@ export default function Index() {
             <Link to="/purchase" className="hover:text-white">Purchase</Link>
             <Link to="/login" className="hover:text-white">Login</Link>
           </div>
-          <p className="mt-4">© {new Date().getFullYear()} BOOTCAMP. All rights reserved.</p>
+          <p className="mt-4">© 2025 BOOTCAMP. All rights reserved.</p>
         </div>
       </footer>
     </PageTransition>
