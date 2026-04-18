@@ -85,7 +85,9 @@ export default function AdminDashboard() {
     }
   };
 
-  useEffect(reload, []);
+  useEffect(() => {
+    reload();
+  }, []);
 
   const getStudentProgress = (userId: string, moduleId: string) => {
     const data = JSON.parse(localStorage.getItem(`progress_${userId}`) || '{}');
@@ -358,7 +360,11 @@ export default function AdminDashboard() {
                     {students.map(s => (
                       <TableRow key={s.id}>
                         <TableCell>{s.name}</TableCell>
-                        {modules.map(m => <TableCell key={m.id}>{getStudentProgress(s.id, m.id)}%</TableCell>)}
+                        {modules.map(m => (
+                          <TableCell key={`${s.id}-${m.id}`}>
+                            {getStudentProgress(s.id, m.id)}%
+                          </TableCell>
+                        ))}
                       </TableRow>
                     ))}
                   </TableBody>
