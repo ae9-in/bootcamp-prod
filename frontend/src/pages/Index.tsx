@@ -6,7 +6,7 @@ import { modules } from '@/lib/seedData';
 import PageTransition from '@/components/PageTransition';
 import HeroSection from '@/components/HeroSection';
 import { TickerBar } from '@/components/HeroSection';
-import { ArrowRight, Code, Users, Briefcase, Video, Shield } from 'lucide-react';
+import { ArrowRight, Code, Users, Briefcase, Video, Shield, BookOpen } from 'lucide-react';
 
 const moduleIcons: Record<string, React.ElementType> = {
   ba: Briefcase,
