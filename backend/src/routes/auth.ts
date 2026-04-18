@@ -8,9 +8,11 @@ const router = Router();
 router.post('/register', async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
+    console.log(`Registration attempt: ${email} (${role})`);
     
     const existingUser = await User.findOne({ email });
     if (existingUser) {
+      console.log(`Registration failed: Email ${email} already exists`);
       return res.status(400).json({ message: 'Email already exists' });
     }
 
@@ -24,6 +26,7 @@ router.post('/register', async (req, res) => {
     });
 
     await user.save();
+    console.log(`User created successfully: ${email}`);
 
     const token = jwt.sign(
       { userId: user._id, email: user.email, role: user.role },
@@ -41,6 +44,10 @@ router.post('/register', async (req, res) => {
       }
     });
   } catch (error) {
+    console.error('Registration error:', error);
+    if ((error as any).name === 'ValidationError') {
+      return res.status(400).json({ message: (error as Error).message });
+    }
     res.status(500).json({ message: 'Server error', error: (error as Error).message });
   }
 });
@@ -48,14 +55,17 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log(`Login attempt: ${email}`);
 
     const user = await User.findOne({ email });
     if (!user) {
+      console.log(`Login failed: User ${email} not found`);
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
+      console.log(`Login failed: Password mismatch for ${email}`);
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
@@ -65,6 +75,7 @@ router.post('/login', async (req, res) => {
       { expiresIn: (process.env.JWT_EXPIRES_IN || '7d') as any }
     );
 
+    console.log(`Login successful: ${email} (${user.role})`);
     res.json({
       token,
       user: {
@@ -75,6 +86,7 @@ router.post('/login', async (req, res) => {
       }
     });
   } catch (error) {
+    console.error('Login error:', error);
     res.status(500).json({ message: 'Server error', error: (error as Error).message });
   }
 });
