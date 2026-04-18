@@ -216,9 +216,6 @@ export default function HeroSection() {
               delay={30}
               duration={0.8}
               ease="power3.out"
-              splitType="chars"
-              from={{ opacity: 0, y: 40 }}
-              to={{ opacity: 1, y: 0 }}
               threshold={0.1}
               rootMargin="0px"
               textAlign="center"

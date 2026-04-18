@@ -47,19 +47,23 @@ const SplitText = ({
   }, []);
 
   useEffect(() => {
+    // If we've already started animating, or things aren't ready, don't re-initialize.
     if (!fontsReady || !containerRef.current || animatedRef.current) return;
 
     const gsap = (window as any).gsap;
     if (!gsap) return;
 
+    // Use a local variable to ensure we don't re-calculate chars if not needed
     const chars = letterRefs.current.filter(Boolean);
+    if (chars.length === 0) return;
 
     const runAnimation = () => {
       if (animatedRef.current) return;
       animatedRef.current = true;
 
       gsap.to(chars, {
-        ...to,
+        opacity: to.opacity,
+        y: to.y,
         duration,
         ease,
         stagger: delay / 1000,
@@ -71,20 +75,22 @@ const SplitText = ({
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting) {
+        if (entries[entryNumber]?.isIntersecting || entries[0].isIntersecting) {
           runAnimation();
           observer.disconnect();
         }
       },
       { threshold, rootMargin }
     );
+    const entryNumber = 0;
 
     observer.observe(containerRef.current);
 
     return () => {
       observer.disconnect();
     };
-  }, [fontsReady, text, delay, duration, ease, threshold, rootMargin, to]);
+    // Removed 'to' from dependency array to prevent infinite loop from object literals
+  }, [fontsReady, text, delay, duration, ease, threshold, rootMargin]);
 
   const characters = text.split('');
 
