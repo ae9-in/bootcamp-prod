@@ -19,9 +19,12 @@ export default function Navbar() {
   const dashboardPath = currentUser ? `/dashboard/${currentUser.role}` : '/';
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-white/15 bg-[#1e1b3a]/85 backdrop-blur-xl shadow-lg shadow-black/25">
+    <nav className="sticky top-0 z-50 border-b border-indigo-500/10 bg-[#0a0a14]/60 backdrop-blur-2xl transition-colors duration-300">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
-        <Link to="/" className="text-xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent tracking-tight">BOOTCAMP</Link>
+        <Link to="/" className="group flex items-center gap-2 text-xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent hover:brightness-125 transition-all">
+          <div className="h-2 w-2 rounded-full bg-indigo-500 animate-pulse" />
+          BOOTCAMP
+        </Link>
 
         {/* Desktop */}
         <div className="hidden items-center gap-6 md:flex">

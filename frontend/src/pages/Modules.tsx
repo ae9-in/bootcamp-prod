@@ -1,10 +1,14 @@
+import { useState } from 'react';
 import BentoGrid from '@/components/BentoGrid';
 import { useAuth } from '@/context/AuthContext';
 import { modules } from '@/lib/seedData';
 import PageTransition from '@/components/PageTransition';
+import { Input } from '@/components/ui/input';
+import { Search } from 'lucide-react';
 
 export default function Modules() {
   const { currentUser } = useAuth();
+  const [search, setSearch] = useState('');
 
   const getProgress = (moduleId: string) => {
     if (!currentUser) return 0;
@@ -14,7 +18,13 @@ export default function Modules() {
     return Math.round((data[moduleId].length / mod.topics.length) * 100);
   };
 
-  const bentoData = modules.map(m => ({
+  const filteredModules = modules.filter(m => 
+    m.title.toLowerCase().includes(search.toLowerCase()) || 
+    m.description.toLowerCase().includes(search.toLowerCase()) ||
+    m.topics.some(t => t.toLowerCase().includes(search.toLowerCase()))
+  );
+
+  const bentoData = filteredModules.map(m => ({
     id: m.id,
     title: m.title,
     description: m.description,
@@ -25,11 +35,23 @@ export default function Modules() {
   return (
     <PageTransition>
       <div className="mx-auto max-w-7xl px-4 py-16">
-        <div className="mb-12">
-          <h1 className="text-4xl font-extrabold text-white tracking-tight">Learning Modules</h1>
-          <p className="mt-4 text-lg text-indigo-200/60 max-w-2xl">
-            Dive into our expert-led bootcamps. Explore interactive lessons, track your progress, and master your career.
-          </p>
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+          <div className="flex-1">
+            <h1 className="text-4xl font-extrabold text-white tracking-tight">Learning Modules</h1>
+            <p className="mt-4 text-lg text-indigo-200/60 max-w-2xl">
+              Dive into our expert-led bootcamps. Master your career with structured learning.
+            </p>
+          </div>
+          
+          <div className="relative w-full max-w-sm">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-indigo-400" />
+            <Input 
+              placeholder="Search bootcamps or topics..." 
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-10 bg-indigo-950/20 border-indigo-500/20 text-white placeholder:text-indigo-400/50"
+            />
+          </div>
         </div>
         
         <BentoGrid 

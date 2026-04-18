@@ -123,6 +123,73 @@ export default function Index() {
         </div>
       </section>
 
+      {/* FAQ Section */}
+      <section className="bg-[#0a0a14] py-20">
+        <div className="mx-auto max-w-3xl px-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-3xl font-bold text-white">Frequently Asked Questions</h2>
+            <p className="mt-2 text-indigo-300">Everything you need to know about starting your tech journey</p>
+          </motion.div>
+          
+          <div className="space-y-4">
+            {[
+              { q: "How long are the bootcamp sessions?", a: "Most sessions are 2 hours long, held 3-5 times a week depending on the chosen module." },
+              { q: "Is job assistance provided?", a: "Yes, we provide resume building, mock interviews, and direct placement assistance for students who complete the final projects." },
+              { q: "Can I switch modules mid-way?", a: "Yes, we allow one module swap within the first 2 weeks of the program." },
+              { q: "Do I get a certificate?", a: "Absolutely! You receive an industry-recognized certificate upon successful completion of your bootcamp." }
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="group rounded-xl border border-indigo-500/10 bg-indigo-950/20 p-6 transition-all hover:border-indigo-500/30"
+              >
+                <h3 className="text-lg font-semibold text-white group-hover:text-indigo-400 transition-colors">{item.q}</h3>
+                <p className="mt-2 text-sm text-indigo-300/80 leading-relaxed">{item.a}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Newsletter / CTA Section */}
+      <section className="relative overflow-hidden py-24">
+        <div className="absolute inset-0 bg-indigo-600/5 backdrop-blur-3xl" />
+        <div className="absolute -top-24 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-indigo-500/20 blur-[120px]" />
+        
+        <div className="relative mx-auto max-w-4xl px-4 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="rounded-3xl border border-white/10 bg-white/5 p-12 backdrop-blur-md"
+          >
+            <h2 className="text-4xl font-bold text-white">Join the Elite 1%</h2>
+            <p className="mx-auto mt-4 max-w-xl text-indigo-200">
+              Get weekly insights on the tech industry, career tips, and exclusive bootcamp discounts delivered to your inbox.
+            </p>
+            <form className="mt-10 flex flex-col gap-3 sm:flex-row sm:justify-center" onSubmit={(e) => e.preventDefault()}>
+              <input 
+                type="email" 
+                placeholder="Enter your email" 
+                className="h-12 w-full max-w-md rounded-xl border border-indigo-500/30 bg-indigo-950/50 px-6 text-white placeholder-indigo-300/50 outline-none ring-indigo-500 transition-all focus:ring-2"
+              />
+              <Button size="lg" className="bg-indigo-600 hover:bg-indigo-700 shadow-xl shadow-indigo-600/20">
+                Subscribe Now
+              </Button>
+            </form>
+            <p className="mt-4 text-xs text-indigo-300/50 italic">No spam, just quality content. Unsubscribe anytime.</p>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="bg-[#0a0a14] border-t border-indigo-500/20 py-10">
         <div className="mx-auto max-w-7xl px-4 text-center text-sm text-indigo-300">
