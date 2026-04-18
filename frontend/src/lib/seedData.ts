@@ -39,6 +39,20 @@ export const modules: ModuleData[] = [
     description: 'Build full-stack web applications from scratch using modern tools and frameworks.',
     topics: ['HTML & CSS', 'JavaScript Fundamentals', 'React Basics', 'API Integration', 'Deployment'],
   },
+  {
+    id: 'bo',
+    title: 'Business Operations',
+    shortCode: 'BO',
+    description: 'Master the internal processes and operational efficiencies that drive business success.',
+    topics: ['Process Optimization', 'Supply Chain Basics', 'Project Management', 'Operational Risk', 'Lean Methodologies'],
+  },
+  {
+    id: 'bde',
+    title: 'Business Development',
+    shortCode: 'BDE',
+    description: 'Learn the strategies and tools used by top BDEs to identify new opportunities and scale businesses.',
+    topics: ['Lead Generation', 'Sales Funnels', 'Strategic Partnerships', 'Market Analysis', 'Client Relationship Management'],
+  },
 ];
 
 export const defaultAttendanceLogs: any[] = [
